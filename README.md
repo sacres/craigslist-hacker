@@ -11,6 +11,6 @@ ones that regularly have jobs). This takes a fair amount of time
 depending on your internet connection. You only need to do this once.
 To search jobs:
 
-    python main.py -search
+    python main.py --search
 
 which stores everything into `post.html`.
