@@ -6,6 +6,17 @@ import sys
 
 DAYS_TO_SEARCH = 3
 
+POSTS_FILTERS_ACCEPT = [lambda x,y=text: x.find(y) != -1 for text in [
+    'program', 'develop', 'web', 'build']]
+
+POSTS_FILTERS_REJECT = [lambda x,y=text: x.find(y) != -1 for text in [
+    'wordpress', 'c++', 'mobile', 'drupal', 'magento', 'android',
+    'iphone', 'php', 'node.js', 'asp.net']]
+
+POSTS_FILTERS_REJECT += (
+    lambda x: x.find('design') != -1 and x.find('develop') == -1 and x.find('program') == -1,
+)
+
 def build_soup(url, times = 3):
     page = None
     for i in range(1, times):
@@ -31,6 +42,18 @@ def parse_posts_from_tags(tags, url, days):
         if tag.name == 'p':
             try:
                 link = tag.find('span', {'class': 'pl'}).find('a')
+                text = link.get_text()
+
+                # skip if we find something to reject
+                rejections = [1 for func in POSTS_FILTERS_REJECT if func(text.lower())]
+                if len(rejections) > 0:
+                    continue
+
+                # skip if we can't find anything to accept
+                accepts = [1 for func in POSTS_FILTERS_ACCEPT if func(text.lower())]
+                if len(accepts) == 0:
+                    continue
+
                 posts.append((link.get_text(), url + link['href']))
             except AttributeError:
                 continue
@@ -55,16 +78,16 @@ def write_posts(posts, file_name):
     f1 = open(file_name, 'w')
 
     print >> f1, '<!DOCTYPE html><html><head><title></title><style>body {'
-    print >> f1, 'font: normal small Verdana; } a { color: #333; }'
-    print >> f1, 'a:visited { color: #999; }</style><body>'
+    print >> f1, 'font: normal small Verdana; } a:visited { color: #999; }'
+    print >> f1, 'li { margin-bottom: 8px; }</style><body><ol>'
 
     for post in posts:
         try:
-            print >> f1, '<p><a href="%s">%s</a><p />' % (post[1], post[0])
+            print >> f1, '<li><a target="_blank" href="%s">%s</a></li>' % (post[1], post[0])
         except Exception:
             continue
 
-    print >> f1, '</body></html>'
+    print >> f1, '</ol></body></html>'
 
 #################################################################################
 
@@ -110,7 +133,7 @@ def check_url_for_posts(url, repeats = 3, days = DAYS_TO_SEARCH):
         return False
 
     for i in range(1, days):
-        if page.find((date.today() - deltatime(i)).strftime('%a %b %d')) != -1:
+        if page.find((date.today() - timedelta(i)).strftime('%a %b %d')) != -1:
             return True
     return False
 
@@ -139,6 +162,8 @@ if __name__ == '__main__':
         posts = []
 
         for url in urls:
-            posts += get_posts(url)
+            page_posts = get_posts(url)
+            if page_posts:
+                posts += page_posts
 
         write_posts(posts, 'posts.html')
