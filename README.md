@@ -14,3 +14,7 @@ To search jobs:
     python main.py --search
 
 which stores everything into `post.html`.
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/sacres/craigslist-hacker/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
