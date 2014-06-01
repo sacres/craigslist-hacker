@@ -1,8 +1,10 @@
 craigslist-hacker
 =================
 
-craigslist-hacker searches Craigslist for programming jobs (under
-/cpg/). First:
+Forked from: https://github.com/brandonhsiao/craigslist-hacker
+
+This version of craigslist-hacker searches Craigslist for sysadmin/devops roles (under
+/sad/). First:
 
     python main.py --init
 

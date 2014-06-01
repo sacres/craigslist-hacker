@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+""" search ALL craigslist subsites for sysadmin roles. Use --init the initial run and --search subsequently. """
+
 from bs4 import BeautifulSoup
 from urllib2 import urlopen
 from datetime import date, timedelta
@@ -7,7 +10,7 @@ import sys
 DAYS_TO_SEARCH = 3
 
 POSTS_FILTERS_ACCEPT = [lambda x,y=text: x.find(y) != -1 for text in [
-    'program', 'develop', 'web', 'build']]
+    'linux', 'sysadmin', 'devops']]
 
 POSTS_FILTERS_REJECT = [lambda x,y=text: x.find(y) != -1 for text in [
     'wordpress', 'c++', 'mobile', 'drupal', 'magento', 'android',
@@ -60,7 +63,7 @@ def parse_posts_from_tags(tags, url, days):
     return posts
 
 def get_posts(url, days = DAYS_TO_SEARCH):
-    new_url = url + '/cpg'
+    new_url = url + '/sad'
 
     print 'searching', new_url
     soup = build_soup(new_url)
@@ -137,7 +140,7 @@ def check_url_for_posts(url, repeats = 3, days = DAYS_TO_SEARCH):
             return True
     return False
 
-def build_url_list(category = 'cpg'):
+def build_url_list(category = 'sad'):
     urls = get_location_urls()
     return [x for x in urls if check_url_for_posts('%s/%s' % (x, category))]
 
