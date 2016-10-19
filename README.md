@@ -3,6 +3,7 @@ craigslist-hacker
 
 Forked from: https://github.com/brandonhsiao/craigslist-hacker
 
+*********** DEFUNCT **************
 This version of craigslist-hacker searches Craigslist for sysadmin/devops roles (under
 /sad/). First:
 
